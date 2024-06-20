@@ -16,7 +16,7 @@ CREATE TABLE threads (
     deleted BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE message (
+CREATE TABLE messages (
     id BIGINT AUTO_INCREMENT PRIMARY KEY ,
     thread_id BIGINT NOT NULL REFERENCES threads(id),
     user_id BIGINT NOT NULL REFERENCES users(id),
