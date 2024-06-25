@@ -1,9 +1,11 @@
 package jp.ac.it_college.std.s23017.message.board.domain.repository
 
 import jp.ac.it_college.std.s23017.message.board.domain.model.User
-import org.springframework.data.jpa.repository.JpaRepository
-import java.util.Optional
 
-interface UserRepository : JpaRepository<User, Long> {
-    fun findByEmail(email: String): Optional<User>
+interface UserRepository{
+    fun findById(id: Long): User?
+    fun findByEmail(email: String): User?
+    fun save(user: User): User
+    fun update(user: User): User
+    fun delete(user: User)
 }
