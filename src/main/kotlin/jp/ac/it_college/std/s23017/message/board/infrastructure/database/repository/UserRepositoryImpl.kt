@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepositoryImpl : UserRepository {
-    override fun find(email: String): User? = transaction {
+
+    override fun findByEmail(email: String): User? = transaction {
         UserEntity.find { UserTable.email eq email }.firstOrNull()?.toUser()
     }
 
-    override fun find(id: Long): User? = transaction {
+    override fun findById(id: Long): User? = transaction {
         UserEntity.findById(id)?.toUser()
     }
 

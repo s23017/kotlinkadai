@@ -2,26 +2,22 @@ package jp.ac.it_college.std.s23017.message.board.application.service
 
 import jp.ac.it_college.std.s23017.message.board.domain.model.User
 import jp.ac.it_college.std.s23017.message.board.domain.repository.UserRepository
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.jetbrains.exposed.dao.exceptions.EntityNotFoundException
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
-class UserService(
-    private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
-) {
-    fun registerUser(user: User): User {
-        val encodedPassword = passwordEncoder.encode(user.password)
-        val userWithEncodedPassword = user.copy(password = encodedPassword)
-        return userRepository.save(userWithEncodedPassword)
+class UserService(private val userRepository: UserRepository) {
+
+    fun findUserById(id: Long): User? {
+        return userRepository.findById(id)
     }
 
-    fun findUserByEmail(email: String): Optional<User> {
+    fun findUserByEmail(email: String): User? {
         return userRepository.findByEmail(email)
     }
 
-    fun findUserById(id: Long): User? {
-        return userRepository.findById(id).orElse(null)
+    fun registerUser(user: User): User {
+        // ここでパスワードのハッシュ化などのビジネスロジックを実装することができます
+        return userRepository.save(user)
     }
 }
