@@ -1,10 +1,10 @@
 spring:
-application:
-name: MessageBoard
-datasource:
-url: jdbc:mariadb://localhost:3306/message_board
-username: message_board
-password: foobarhogepiyo
-driver-class-name: org.mariadb.jdbc.Driver
-jackson:
-property-naming-strategy: SNAKE_CASE
+  application:
+    name: MessageBoard
+  datasource:
+    url: jdbc:mariadb://localhost:3306/message_board
+    username: spring
+    password: boot
+    driver-class-name: org.mariadb.jdbc.Driver
+  jackson:
+    property-naming-strategy: SNAKE_CASE
