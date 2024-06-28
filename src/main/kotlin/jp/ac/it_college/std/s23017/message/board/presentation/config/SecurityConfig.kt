@@ -4,11 +4,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
@@ -26,8 +23,8 @@ class SecurityConfig {
             .authorizeHttpRequests { authz ->
                 authz
                     .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/user/**").hasRole("USER")
-                    .anyRequest().authenticated()
+                    .requestMatchers("/users/**", "/threads/**", "/messages/**").hasRole("USER")
+                    .anyRequest().permitAll()
             }
             .formLogin { form ->
                 form
@@ -40,18 +37,5 @@ class SecurityConfig {
 
         return http.build()
     }
-
-    @Bean
-    fun userDetailsService(passwordEncoder: PasswordEncoder): UserDetailsService {
-        val userDetailsService = InMemoryUserDetailsManager()
-
-        val user = User.withUsername("user")
-            .password(passwordEncoder.encode("password"))
-            .roles("USER")
-            .build()
-
-        userDetailsService.createUser(user)
-
-        return userDetailsService
-    }
 }
+

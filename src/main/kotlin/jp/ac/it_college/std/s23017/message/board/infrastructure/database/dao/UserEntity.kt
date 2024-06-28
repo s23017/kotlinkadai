@@ -1,7 +1,6 @@
 package jp.ac.it_college.std.s23017.message.board.infrastructure.database.dao
 
 import jp.ac.it_college.std.s23017.message.board.domain.model.User
-import jp.ac.it_college.std.s23017.message.board.domain.type.RoleType
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -20,7 +19,7 @@ class UserEntity(id: EntityID<Long>) : LongEntity(id) {
             username,
             password,
             email,
-            roleType
+            roleType.toString()
         )
     }
 }

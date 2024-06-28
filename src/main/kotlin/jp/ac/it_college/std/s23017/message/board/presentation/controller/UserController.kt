@@ -1,38 +1,31 @@
 package jp.ac.it_college.std.s23017.message.board.presentation.controller
 
 import jp.ac.it_college.std.s23017.message.board.application.service.UserService
-import jp.ac.it_college.std.s23017.message.board.domain.model.User
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import jp.ac.it_college.std.s23017.message.board.application.service.security.MessageBoardUserDetails
+import jp.ac.it_college.std.s23017.message.board.presentation.form.GetUserInfoResponse
+import jp.ac.it_college.std.s23017.message.board.presentation.form.PostUserRegisterRequest
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/users")
-class UserController(private val userService: UserService) {
-
-    @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: Long): ResponseEntity<User> {
-        val user = userService.findUserById(id)
-        return if (user != null) {
-            ResponseEntity.ok(user)
-        } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+@RequestMapping("/users")
+@CrossOrigin
+class UserController(
+    private val userService: UserService,
+) {
+    @PostMapping("/register")
+    fun register(@RequestBody user: PostUserRegisterRequest) {
+        user.run {
+            userService.register(viewName, email, password)
         }
     }
 
-    @GetMapping("/email/{email}")
-    fun getUserByEmail(@PathVariable email: String): ResponseEntity<User> {
-        val user = userService.findUserByEmail(email)
-        return if (user != null) {
-            ResponseEntity.ok(user)
-        } else {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-        }
-    }
-
-    @PostMapping
-    fun createUser(@RequestBody user: User): ResponseEntity<User> {
-        val registeredUser = userService.registerUser(user)
-        return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser)
+    @GetMapping("/info")
+    fun getInfo(
+        @AuthenticationPrincipal user: MessageBoardUserDetails
+    ): GetUserInfoResponse {
+        return userService.find(user.id)?.run {
+            id?.let { GetUserInfoResponse(it, viewName) }
+        } ?: throw IllegalArgumentException("User not found")
     }
 }
