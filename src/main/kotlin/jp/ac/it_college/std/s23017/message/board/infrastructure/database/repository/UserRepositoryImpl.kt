@@ -9,22 +9,45 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepositoryImpl : UserRepository {
-
-    override fun findByEmail(email: String): User? = transaction {
-        UserEntity.find { UserTable.email eq email }.firstOrNull()?.toUser()
-    }
-
-    override fun findById(id: Long): User? = transaction {
-        UserEntity.findById(id)?.toUser()
-    }
-
-    override fun save(user: User): User = transaction {
-        val userEntity = UserEntity.new(user.id) {
-            username = user.username
-            password = user.password
-            email = user.email
-            roleType = user.roleType
+    override fun findByEmail(email: String): User? {
+        return transaction {
+            UserEntity.find { UserTable.email eq email }.singleOrNull()?.toDomain()
         }
-        userEntity.toUser()
+    }
+
+    override fun findById(id: Long): User? {
+        return transaction {
+            UserEntity.findById(id)?.toDomain()
+        }
+    }
+
+    override fun save(user: User): User {
+        return transaction {
+            val userEntity = if (user.id == null) {
+                UserEntity.new {
+                    viewName = user.viewName
+                    email = user.email
+                    password = user.password
+                }
+            } else {
+                val existingUser = UserEntity.findById(user.id)
+                    ?: throw IllegalArgumentException("User not found")
+                existingUser.apply {
+                    viewName = user.viewName
+                    email = user.email
+                    password = user.password
+                }
+            }
+            userEntity.toDomain()
+        }
+    }
+
+    private fun UserEntity.toDomain(): User {
+        return User(
+            id = this.id.value,
+            viewName = this.viewName,
+            email = this.email,
+            password = this.password
+        )
     }
 }

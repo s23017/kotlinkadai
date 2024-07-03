@@ -15,8 +15,4 @@ class UserService(
         val user = User(viewName = viewName, email = email, password = encodedPassword)
         return userRepository.save(user)
     }
-
-    fun find(userId: Long): User? {
-        return userRepository.findById(userId)
-    }
 }

@@ -22,9 +22,8 @@ class SecurityConfig {
         http
             .authorizeHttpRequests { authz ->
                 authz
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/users/**", "/threads/**", "/messages/**").hasRole("USER")
-                    .anyRequest().permitAll()
+                    .requestMatchers("/users/register").permitAll() // ユーザー登録は認証不要に設定
+                    .anyRequest().authenticated()
             }
             .formLogin { form ->
                 form
