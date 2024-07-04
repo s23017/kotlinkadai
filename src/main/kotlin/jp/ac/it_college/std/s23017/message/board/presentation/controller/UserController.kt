@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*
 class UserController(
     private val userService: UserService
 ) {
+
     @PostMapping("/register")
     fun register(@RequestBody request: RegisterUserRequest) {
-        userService.register(request.username, request.email, request.password)
+        userService.registerUser(request.username, request.email, request.password)
     }
 }
-

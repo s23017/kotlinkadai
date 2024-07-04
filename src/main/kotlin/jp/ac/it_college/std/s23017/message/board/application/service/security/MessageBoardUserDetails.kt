@@ -16,7 +16,7 @@ class MessageBoardUserDetails(
     }
 
     override fun getUsername(): String {
-        return user.email
+        return user.email // Userモデルのemailプロパティを使用する
     }
 
     override fun isAccountNonExpired(): Boolean {
@@ -36,5 +36,5 @@ class MessageBoardUserDetails(
     }
 
     val id: Long
-        get() = user.id!!
+        get() = user.id // null安全なアクセスに変更
 }
